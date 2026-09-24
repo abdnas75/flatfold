@@ -73,7 +73,6 @@
       octx2.fillRect(0, 0, w, h);
 
       // mirror to match the flipped video preview
-      octx2.setTransform(-1, 0, 0, 1, w, 0);
 
       var sx = w / small.width, sy = h / small.height;
       var pts = q.map(function (p) { return [p[0] * sx, p[1] * sy]; });

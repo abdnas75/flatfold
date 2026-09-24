@@ -278,8 +278,7 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .capture-view { position: relative; }
 .cam-wrap { position: relative; width: 100%; height: 100%; overflow: hidden; background: #000; }
 #cam-video {
-  width: 100%; height: 100%; object-fit: cover;
-  transform: scaleX(-1);
+  width: 100%; height: 100%; object-fit: contain;
 }
 #cam-overlay { position: absolute; inset: 0; width: 100%; height: 100%; }
 .cam-top {

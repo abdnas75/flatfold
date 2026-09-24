@@ -221,9 +221,13 @@ imgFromDataURL(dataURL).then(function (image) {
 
   /* ---------------- Editor ---------------- */
 
-  function openEditor(image, filter) {
+function openEditor(image, filter) {
     showView('view-editor');
-    FlatFoldEditor.open(image, filter || 'original');
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        FlatFoldEditor.open(image, filter || 'original');
+      });
+    });
   }
 
   function cancelEditor() {
