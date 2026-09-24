@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>FlatFold - Free Document Scanner</title>
+    <meta name="description" content="Free, private, offline document scanner. No subscription, no upload. Scan to clean PDF in seconds.">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32x32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180x180.png">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0b1424">
+    <style>
+      html, body { margin: 0; padding: 0; height: 100%; background: #020810; }
+    </style>
+    <link rel="stylesheet" href="styles.css" media="print" onload="this.media='all'; window.dispatchEvent(new Event('styles-applied'))">
+    <noscript><link rel="stylesheet" href="styles.css"></noscript>
+</head>
+<body>
+
+    <div class="ff-app" id="ff-app">
+
+        <!-- ============ HOME ============ -->
+        <section class="view home-view" id="view-home">
+            <header class="topbar">
+                <div class="brand">
+                    <div class="brand-markwrap"><svg class="brand-mark" viewBox="0 0 48 48" width="34" height="34" aria-hidden="true"><path class="bm-fold" d="M10 6h20l8 8v28H10z"/><path class="bm-page" d="M30 6v8h8"/><path class="bm-line" d="M16 24h16M16 30h16M16 36h9"/></svg></div>
+                    <div class="brand-text">
+                        <strong>FlatFold</strong>
+                        <span>Free Document Scanner</span>
+                    </div>
+                </div>
+                <div class="topbar-actions">
+                    <div class="theme-picker">
+                        <button class="icon-btn" id="theme-toggle" title="Change Theme" aria-label="Change theme">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                        </button>
+                        <div class="theme-dropdown" id="theme-dropdown" role="menu" aria-label="Theme">
+                            <button data-theme="dark" class="theme-option">
+                                <span class="theme-dot dot-dark" aria-hidden="true"></span>Dark
+                            </button>
+                            <button data-theme="light" class="theme-option">
+                                <span class="theme-dot dot-light" aria-hidden="true"></span>Light
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="home-main">
+                <div class="hero">
+                    <h1>Turn photos into clean<br>PDF documents.</h1>
+                    <p>Smart edge detection, auto enhance and PDF export. Everything stays on your device.</p>
+                    <div class="hero-actions">
+                        <button class="btn btn-primary btn-lg" id="new-scan-btn">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                            Scan Document
+                        </button>
+                        <button class="btn btn-secondary btn-lg" id="import-btn">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                            Import Photos
+                        </button>
+                    </div>
+                </div>
+
+                <div class="docs-section">
+                    <div class="docs-head">
+                        <h2>Recent Documents</h2>
+                        <button class="btn btn-ghost" id="clear-btn" title="Delete all documents">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                            Clear
+                        </button>
+                    </div>
+                    <div id="doc-list" class="doc-list"></div>
+                    <div id="doc-empty" class="doc-empty">
+                        <div class="doc-empty-icon">
+                            <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
+                        </div>
+                        <p>No documents yet.<br>Scan or import your first page.</p>
+                    </div>
+                </div>
+            </main>
+        </section>
+
+        <!-- ============ CAPTURE (CAMERA) ============ -->
+        <section class="view capture-view" id="view-capture" hidden>
+            <div class="cam-wrap">
+                <video id="cam-video" autoplay playsinline muted></video>
+                <canvas id="cam-overlay"></canvas>
+                <div class="cam-top">
+                    <button class="icon-btn dark" id="capture-close" aria-label="Close camera">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                    <div class="cam-hint" id="cam-hint">Align the document inside the frame, then tap the shutter</div>
+                </div>
+                <div class="cam-bottom">
+                    <button class="shutter" id="shutter-btn" aria-label="Capture">
+                        <span class="shutter-ring"></span>
+                    </button>
+                    <button class="cam-gal" id="cam-import-btn" aria-label="Import from gallery">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    </button>
+                </div>
+            </div>
+            <input type="file" id="file-input" accept="image/*" multiple hidden>
+        </section>
+
+        <!-- ============ EDITOR ============ -->
+        <section class="view editor-view" id="view-editor" hidden>
+            <header class="editor-top">
+                <button class="icon-btn" id="editor-cancel" aria-label="Cancel">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+                <div class="editor-title">
+                    <strong id="editor-title">Adjust Scan</strong>
+                    <span id="editor-sub">Move corners, pick a filter, then Save</span>
+                </div>
+                <button class="btn btn-primary btn-sm" id="editor-save">Save</button>
+            </header>
+
+            <div class="editor-stage" id="editor-stage">
+                <canvas id="editor-canvas"></canvas>
+                <div class="corner-handle" data-corner="0" hidden></div>
+                <div class="corner-handle" data-corner="1" hidden></div>
+                <div class="corner-handle" data-corner="2" hidden></div>
+                <div class="corner-handle" data-corner="3" hidden></div>
+            </div>
+
+            <div class="editor-toolbar">
+                <button class="tool-btn" id="rotate-btn" title="Rotate 90°">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                    <span>Rotate</span>
+                </button>
+                <button class="tool-btn" id="auto-btn" title="Auto detect edges">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V3h4"/><path d="M7 21H3v-4"/><path d="M21 17v4h-4"/><path d="M17 3h4v4"/><path d="M7 12h10M12 7v10"/></svg>
+                    <span>Auto</span>
+                </button>
+                <button class="tool-btn" id="reset-btn" title="Reset corners">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><polyline points="3 3 3 8 8 8"/></svg>
+                    <span>Reset</span>
+                </button>
+            </div>
+
+            <div class="filter-bar" id="filter-bar">
+                <button class="filter-chip active" data-filter="enhance">Enhance</button>
+                <button class="filter-chip" data-filter="original">Original</button>
+                <button class="filter-chip" data-filter="bw">B&W</button>
+                <button class="filter-chip" data-filter="gray">Grayscale</button>
+            </div>
+        </section>
+
+        <!-- ============ PAGES ============ -->
+        <section class="view pages-view" id="view-pages" hidden>
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="icon-btn" id="pages-back" aria-label="Back to home">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    </button>
+                    <div class="doc-title-wrap">
+                        <input id="doc-name" class="doc-name-input" value="Scan">
+                        <span class="doc-pages-count" id="doc-pages-count">0 pages</span>
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-sm" id="export-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    Export PDF
+                </button>
+            </header>
+
+            <div class="pages-actions">
+                <button class="btn btn-secondary" id="add-scan-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                    Scan Page
+                </button>
+                <button class="btn btn-secondary" id="add-import-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+                    Import
+                </button>
+            </div>
+
+            <div class="pages-grid" id="pages-grid"></div>
+            <div class="pages-empty" id="pages-empty" hidden>
+                <p>No pages yet — scan or import one.</p>
+            </div>
+        </section>
+
+    </div>
+
+    <div class="toast" id="toast"></div>
+    <input type="file" id="import-file-hidden" accept="image/*" multiple hidden>
+
+    <script src="db.js"></script>
+    <script src="pdfwriter.js"></script>
+    <script src="camera.js"></script>
+    <script src="editor.js"></script>
+    <script src="app.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js?v=1').catch(function () {});
+      }
+      var deferredPrompt;
+      window.addEventListener('beforeinstallprompt', function (e) {
+        e.preventDefault();
+        deferredPrompt = e;
+      });
+    </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "name": "FlatFold - Free Document Scanner",
+  "short_name": "FlatFold",
+  "description": "Free, private, offline document scanner. No subscription, no upload.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "/flatfold/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#050c1e",
+  "theme_color": "#0a1535",
+  "categories": ["productivity", "utilities", "business"],
+  "icons": [
+    { "src": "icons/icon-16x16.png", "sizes": "16x16", "type": "image/png" },
+    { "src": "icons/icon-32x32.png", "sizes": "32x32", "type": "image/png" },
+    { "src": "icons/icon-180x180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "icons/icon-192x192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512x512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
